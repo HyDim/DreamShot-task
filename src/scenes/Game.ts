@@ -1,86 +1,39 @@
-import config from "../config";
-import ParallaxBackground from "../prefabs/ParallaxBackground";
-import { Character } from "../prefabs/Character";
-import { Container, Text, Graphics } from "pixi.js";
-import { centerObjects } from "../utils/misc";
-import Keyboard from "../core/Keyboard";
+import { Container, Sprite, Assets } from "pixi.js";
 import { SceneUtils } from "../core/App";
 
 export default class Game extends Container {
   name = "Game";
 
-  private keyboard = Keyboard.getInstance();
-
-  private character!: Character;
-  private background!: ParallaxBackground;
+  private bg!: Sprite;
 
   constructor(protected utils: SceneUtils) {
     super();
   }
 
   async load() {
-
-    // example use of Pixi Graphics
-    const bg = new Graphics().beginFill(0x0b1354).drawRect(0, 0, window.innerWidth, window.innerHeight)
-
-    // example use of Pixi Text
-    const text = new Text("Loading...", {
-      fontFamily: "Verdana",
-      fontSize: 50,
-      fill: "white",
-    });
-    text.resolution = 2;
-
-    // example use of utils functions
-    centerObjects(text);
-
-    this.addChild(bg, text);
-
     await this.utils.assetLoader.loadAssets();
-
-    this.keyboard.onAction(({ action, buttonState }) => {
-      if (buttonState === "pressed") this.onActionPress(action);
-      else if (buttonState === "released") this.onActionRelease(action);
-    });
   }
 
   async start() {
-    this.removeChildren();
+    this.bg = Sprite.from(Assets.get("background"));
+    this.addChild(this.bg);
 
-    this.background = new ParallaxBackground(config.backgrounds.forest);
-    this.character = new Character();
-
-    this.character.x = window.innerWidth / 2;
-    this.character.y = window.innerHeight - this.character.height / 3;
-
-    this.addChild(this.background, this.character);
+    this.onResize(window.innerWidth, window.innerHeight);
   }
 
-  /**
-   * Called on every ticker update
-   * @param delta 
-   */
-  update(delta: number) {
-    // just some example update logic, reposition paralax background to character
-    const x = this.character.velocity.x * delta;
-    const y = this.character.velocity.y * delta;
-    this.background.updatePosition(x, y);
+  update(_delta: number) {
+    // game loop — nothing yet
   }
 
-  /**
-   * Called on resize of scene
-   * @param width 
-   * @param height 
-   */
   onResize(width: number, height: number) {
-    // resize handling logic here
-  }
+    if (!this.bg) return;
 
-  private onActionPress(action: keyof typeof Keyboard.actions) {
-    this.character.onActionPress(action);
-  }
+    const scaleX = width / this.bg.texture.width;
+    const scaleY = height / this.bg.texture.height;
+    const scale = Math.max(scaleX, scaleY);
 
-  onActionRelease(action: keyof typeof Keyboard.actions) {
-    this.character.onActionRelease(action);
+    this.bg.scale.set(scale);
+    this.bg.x = (width - this.bg.texture.width * scale) / 2;
+    this.bg.y = (height - this.bg.texture.height * scale) / 2;
   }
 }
