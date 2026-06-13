@@ -49,11 +49,11 @@ export default class Vault extends Container {
     this.doorOpen.x = this.doorClosed.width * 0.55;
     this.doorOpen.y = 0;
 
-    // handle + shadow sit at center of the closed door
-    this.handle.x = 0;
-    this.handle.y = 0;
-    this.handleShadow.x = 4;
-    this.handleShadow.y = 4;
+    // handle + shadow nudged to match the visual center of the circular door
+    this.handle.x = -20;
+    this.handle.y = 5;
+    this.handleShadow.x = this.handle.x + 4;
+    this.handleShadow.y = this.handle.y + 4;
   }
 
   async rotateHandle(direction: "CW" | "CCW", steps: number) {
