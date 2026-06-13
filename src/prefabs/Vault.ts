@@ -6,6 +6,7 @@ export default class Vault extends Container {
   private doorOpen: Sprite;
   private handle: Sprite;
   private handleShadow: Sprite;
+  private shine: Sprite;
 
   constructor() {
     super();
@@ -28,7 +29,13 @@ export default class Vault extends Container {
     this.handle = Sprite.from(Assets.get("doorHandle"));
     this.handle.anchor.set(0.5);
 
-    this.addChild(this.doorOpen, this.doorClosed, this.handleShadow, this.handle);
+    // shine effect — sits behind the closed door, visible when door opens
+    this.shine = Sprite.from(Assets.get("shine"));
+    this.shine.anchor.set(0.5);
+    this.shine.visible = false;
+    this.shine.alpha = 0;
+
+    this.addChild(this.doorOpen, this.shine, this.doorClosed, this.handleShadow, this.handle);
 
     this.layoutSprites();
   }
@@ -88,6 +95,39 @@ export default class Vault extends Container {
       duration: 1.5,
       ease: "power2.inOut",
     });
+  }
+
+  async showShine() {
+    this.shine.visible = true;
+    this.shine.scale.set(0.5);
+
+    await gsap.to(this.shine, {
+      alpha: 1,
+      duration: 0.6,
+      ease: "power2.out",
+    });
+
+    // pulsing glow loop — runs until hideShine kills it
+    gsap.to(this.shine.scale, {
+      x: 1.2,
+      y: 1.2,
+      duration: 1.5,
+      ease: "sine.inOut",
+      yoyo: true,
+      repeat: -1,
+    });
+  }
+
+  async hideShine() {
+    gsap.killTweensOf(this.shine);
+    gsap.killTweensOf(this.shine.scale);
+
+    await gsap.to(this.shine, {
+      alpha: 0,
+      duration: 0.4,
+    });
+
+    this.shine.visible = false;
   }
 
   getHandleBounds() {
