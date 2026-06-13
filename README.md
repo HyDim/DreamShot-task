@@ -1,28 +1,31 @@
-### 👉 fork of Hafaux's neat <a href=" https://github.com/Hafaux/pixi-framework" target="_blank">PIXI Framework</a> (feats scene management and Spine animations)
+# DreamShot Vault Game
 
-## 🎮 Simple 2D Game Framework for [PixiJS](https://pixijs.com) using [Vite⚡](https://vitejs.dev/)
+A vault safe mini-game where you crack a secret combination to reveal the treasure inside.
 
-Get started with your first Pixi game in a few quick steps. Spares the hussle dealing with asset loading and initialisation trivia.
+## Setup
 
-### Highlights 🌟
+```
+npm install
+```
 
-- Automagic asset loading (sounds, spritesheets, textures)
-- Typescript
-- <a href="https://c.tenor.com/Hw0aKasI6B4AAAAC/fast-blazing-fast.gif" target="_blank">Blazing fast</a> builds and HMR through Vite
-- GSAP tweening
-- Keyboard input handling
+## Development
 
-## Usage 🛠️
+```
+npm start
+```
 
-1. Clone repository `npx degit https://github.com/Hafaux/pixi-framework.git new-folder`
+Runs on http://localhost:3000
 
-2. Navigate to the new directory and install the project dependencies using `npm install`
+## Build
 
+```
+npm run build
+```
 
-### Commands 💻
+## How it works
 
-| Command           | Description                                                          |
-| ----------------- | -------------------------------------------------------------------- |
-| `npm run start`   | Run dev server                                                       |
-| `npm run build`   | Build project for production                                         |
-| `npm run preview` | Preview production build (must run `build` before running `preview`) |
+- The secret combination is logged in the browser console
+- Click right of the handle to turn clockwise, left for counter-clockwise
+- Each click rotates 60 degrees
+- Get all 3 pairs right to open the vault
+- Wrong input resets with a new code

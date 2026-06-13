@@ -71,12 +71,20 @@ export default class Vault extends Container {
   async openDoor() {
     this.doorOpen.visible = true;
 
-    // slide closed door to the right to reveal treasure
+    // fade out handle as door slides open
+    gsap.to([this.handle, this.handleShadow], {
+      alpha: 0,
+      duration: 0.4,
+    });
+
     await gsap.to(this.doorClosed, {
       x: this.doorClosed.width * 0.85,
       duration: 1.2,
       ease: "power2.inOut",
     });
+
+    this.handle.visible = false;
+    this.handleShadow.visible = false;
   }
 
   async closeDoor() {
@@ -87,6 +95,12 @@ export default class Vault extends Container {
     });
 
     this.doorOpen.visible = false;
+
+    // restore handle for the next round
+    this.handle.visible = true;
+    this.handleShadow.visible = true;
+    this.handle.alpha = 1;
+    this.handleShadow.alpha = 0.5;
   }
 
   async spinCrazy() {
